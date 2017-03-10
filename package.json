@@ -1,5 +1,5 @@
 {
-  "name": "@npm-wearetriple/meister-plugin-webvvt",
+  "name": "@npm-wearetriple/meister-plugin-webvtt",
   "version": "1.0.0",
   "description": "Meister plugin for subtitles with webvtt",
   "main": "dist/WebVtt.js",
