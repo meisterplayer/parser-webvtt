@@ -20,13 +20,13 @@ class WebVtt extends Meister.ParserPlugin {
 
     removeTracks() {
         const tracks = this.meister.playerPlugin.mediaElement.textTracks;
-        for (let i = 0; i < tracks.length; i++) {
+        for (let i = 0; i < tracks.length; i += 1) {
             const track = tracks[i];
             track.default = false;
             track.mode = 'hidden';
         }
         const trackNodes = this.meister.playerPlugin.mediaElement.childNodes;
-        for (let i = 0; i < trackNodes.length; i++) {
+        for (let i = 0; i < trackNodes.length; i += 1) {
             const child = trackNodes.item(i);
             if (child.nodeName.toLowerCase() === 'track') {
                 this.meister.playerPlugin.mediaElement.removeChild(child);
