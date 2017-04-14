@@ -1,6 +1,6 @@
 {
-  "name": "@npm-wearetriple/meister-plugin-webvtt",
-  "version": "1.0.0",
+  "name": "meister-plugin-webvtt",
+  "version": "5.0.0",
   "description": "Meister plugin for subtitles with webvtt",
   "main": "dist/WebVtt.js",
   "scripts": {
@@ -11,6 +11,10 @@
     "video",
     "plugin"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meisterplayer/parser-webvtt.git"
+  },
   "author": "Triple",
   "license": "Apache-2.0",
   "dependencies": {},
