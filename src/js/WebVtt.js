@@ -61,5 +61,6 @@ class WebVtt extends Meister.ParserPlugin {
 }
 
 Meister.registerPlugin(WebVtt.pluginName, WebVtt);
+Meister.registerPlugin('webvtt', WebVtt);
 
 export default WebVtt;
