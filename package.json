@@ -1,5 +1,5 @@
 {
-  "name": "meister-plugin-webvtt",
+  "name": "@meisterplayer/plugin-webvtt",
   "version": "5.0.1",
   "description": "Meister plugin for subtitles with webvtt",
   "main": "dist/WebVtt.js",
