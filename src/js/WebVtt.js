@@ -14,7 +14,8 @@ class WebVtt extends Meister.ParserPlugin {
 
     onItemUnloaded() {
         // No need to remove tracks that aren't there
-        if (!this.meister.playerPlugin || !this.meister.playerPlugin.mediaElement) return;
+        if (!this.meister.playerPlugin || !(this.meister.playerPlugin.mediaElement instanceof HTMLMediaElement)) return;
+
         this.removeTracks();
     }
 
