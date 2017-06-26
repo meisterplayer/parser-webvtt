@@ -1,3 +1,5 @@
+import packageJson from '../../package.json';
+
 class WebVtt extends Meister.ParserPlugin {
     constructor(config, meister) {
         super(config, meister);
@@ -10,6 +12,10 @@ class WebVtt extends Meister.ParserPlugin {
 
     static get pluginName() {
         return 'WebVtt';
+    }
+
+    static get pluginVersion() {
+        return packageJson.version;
     }
 
     onItemUnloaded() {
