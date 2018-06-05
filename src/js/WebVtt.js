@@ -8,6 +8,7 @@ class WebVtt extends Meister.ParserPlugin {
 
         this.on('requestCaptions', this.onRequestCaptions.bind(this));
         this.on('itemUnloaded', this.onItemUnloaded.bind(this));
+        this.on('playlistMetadata', this.onPlaylistMetadata.bind(this));
     }
 
     static get pluginName() {
@@ -41,29 +42,63 @@ class WebVtt extends Meister.ParserPlugin {
         }
     }
 
-    onRequestCaptions(captions) {
-        if (captions.newLanguage === 'none') {
-            this.removeTracks();
-            return;
+    createTrack(caption) {
+        const track = document.createElement('track');
+
+        track.kind = 'captions';
+        track.label = caption.title;
+        track.srclang = caption.lang;
+        track.src = caption.src;
+
+        return track;
+    }
+
+    onPlaylistMetadata(item) {
+        const captions = item.captions;
+
+        /** @type {HTMLTrackElement[]} */
+        let tracks = [];
+
+        if (captions && captions.length) {
+            tracks = captions.map(caption => this.createTrack(caption));
         }
 
-        if (captions.type !== 'webvtt') return;
+        if (captions && !captions.length) {
+            tracks = [this.createTrack(captions)];
+        }
 
-        // First remove all non default tracks
-        this.removeTracks();
+        if (this.meister.playerPlugin && this.meister.playerPlugin.mediaElement) {
+            tracks.forEach((track) => {
+                this.meister.playerPlugin.mediaElement.appendChild(track);
+            });
+        } else {
+            this.on('playerCreated', () => {
+                tracks.forEach((track) => {
+                    this.meister.playerPlugin.mediaElement.appendChild(track);
+                });
+            });
+        }
+    }
 
-        const track = document.createElement('track');
-        track.kind = 'captions';
-        track.label = captions.title;
-        track.scrlang = captions.lang;
-        track.default = true;
-        track.src = captions.src;
+    async onRequestCaptions(captions) {
 
-        track.addEventListener('load', () => {
-            track.mode = 'showing';
-        });
+        /** @type {HTMLVideoElement} */
+        const mediaElement = this.meister.playerPlugin.mediaElement;
+        const tracks = mediaElement.getElementsByTagName('track');
 
-        this.meister.playerPlugin.mediaElement.appendChild(track);
+        for (let index = 0; index < tracks.length; index += 1) {
+            const track = tracks[index];
+
+            if (track.srclang === captions.lang) {
+                track.default = true;
+                track.setAttribute('mode', 'showing');
+                track.track.mode = 'showing';
+            } else {
+                track.default = false;
+                track.setAttribute('mode', 'hidden');
+                track.track.mode = 'hidden';
+            }
+        }
     }
 }
 
