@@ -67,12 +67,12 @@ class WebVtt extends Meister.ParserPlugin {
             tracks = [this.createTrack(captions)];
         }
 
-        if (this.meister.playerPlugin && this.meister.playerPlugin.mediaElement) {
+        if (this.meister.playerPlugin && this.meister.playerPlugin.mediaElement && this.meister.playerPlugin.mediaElement.readyState >= 2) {
             tracks.forEach((track) => {
                 this.meister.playerPlugin.mediaElement.appendChild(track);
             });
         } else {
-            this.on('playerCreated', () => {
+            this.on('playerLoadedMetadata', () => {
                 tracks.forEach((track) => {
                     this.meister.playerPlugin.mediaElement.appendChild(track);
                 });
@@ -90,12 +90,8 @@ class WebVtt extends Meister.ParserPlugin {
             const track = tracks[index];
 
             if (track.srclang === captions.lang) {
-                track.default = true;
-                track.setAttribute('mode', 'showing');
                 track.track.mode = 'showing';
             } else {
-                track.default = false;
-                track.setAttribute('mode', 'hidden');
                 track.track.mode = 'hidden';
             }
         }
