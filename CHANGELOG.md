@@ -1,6 +1,13 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [5.1.3](https://github.com/meisterplayer/parser-webvtt/compare/v5.1.2...v5.1.3) (2020-12-17)
+
+
+### Bug Fixes
+
+* No longer depend on srclang attribute ([1f1e255](https://github.com/meisterplayer/parser-webvtt/commit/1f1e25577fd59ecc35a70d7d70e086797eea6148))
 
 <a name="5.1.2"></a>
 ## [5.1.2](https://github.com/meisterplayer/parser-webvtt/compare/v5.1.1...v5.1.2) (2018-09-24)
