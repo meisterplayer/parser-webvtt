@@ -23,6 +23,7 @@ class WebVtt extends Meister.ParserPlugin {
         // No need to remove tracks that aren't there
         if (!this.meister.playerPlugin || !(this.meister.playerPlugin.mediaElement instanceof HTMLMediaElement)) return;
 
+        this.currentCaptions = [];
         this.removeTracks();
     }
 
@@ -50,51 +51,44 @@ class WebVtt extends Meister.ParserPlugin {
         track.srclang = caption.lang;
         track.src = caption.src;
 
-        return track;
+        return {
+            lang: caption.lang,
+            trackEl: track,
+        };
     }
 
     onPlaylistMetadata(item) {
         const captions = item.captions;
 
-        /** @type {HTMLTrackElement[]} */
-        let tracks = [];
-
         if (captions && captions.length) {
-            tracks = captions.map(caption => this.createTrack(caption));
+            this.currentCaptions = captions.map(caption => this.createTrack(caption));
         }
 
         if (captions && !captions.length) {
-            tracks = [this.createTrack(captions)];
+            this.currentCaptions = [this.createTrack(captions)];
         }
 
         if (this.meister.playerPlugin && this.meister.playerPlugin.mediaElement && this.meister.playerPlugin.mediaElement.readyState >= 2) {
-            tracks.forEach((track) => {
-                this.meister.playerPlugin.mediaElement.appendChild(track);
+            this.currentCaptions.forEach((track) => {
+                this.meister.playerPlugin.mediaElement.appendChild(track.trackEl);
             });
         } else {
             this.on('playerLoadedMetadata', () => {
-                tracks.forEach((track) => {
-                    this.meister.playerPlugin.mediaElement.appendChild(track);
+                this.currentCaptions.forEach((track) => {
+                    this.meister.playerPlugin.mediaElement.appendChild(track.trackEl);
                 });
             });
         }
     }
 
     async onRequestCaptions(captions) {
-
-        /** @type {HTMLVideoElement} */
-        const mediaElement = this.meister.playerPlugin.mediaElement;
-        const tracks = mediaElement.getElementsByTagName('track');
-
-        for (let index = 0; index < tracks.length; index += 1) {
-            const track = tracks[index];
-
-            if (track.srclang === captions.lang) {
-                track.track.mode = 'showing';
+        this.currentCaptions.forEach((track) => {
+            if (track.lang === captions.lang) {
+                track.trackEl.track.mode = 'showing';
             } else {
-                track.track.mode = 'hidden';
+                track.trackEl.track.mode = 'hidden';
             }
-        }
+        });
     }
 }
 
